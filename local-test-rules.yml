@@ -1,28 +1,32 @@
 ---
-- name: Local Test Runner Rules
+- name: Local Test Rules
   hosts: all
   sources:
-    - name: watchdog
-      watchdog:
-        path: "{{src_path}}"
-        recursive: true
-        ignore_regexes: ['.*\.pytest.*', '.*__pycache__.*', '.*/.git.*']
+    - name: Generate a range
+      benthomasson.eda.range:
+        limit: 2000
   rules:
-    - name: run tests 1
-      condition: event.type == "DirModifiedEvent"
-      action:
-        run_playbook:
-          name: run_pytest.yml
-          post_events: true
-    - name: run tests 2
-      condition: event.type == "FileModifiedEvent"
-      action:
-        run_playbook:
-          name: run_pytest.yml
-          post_events: true
-    - name: print output
-      condition: event.output is defined
+    - name: print event 200
+      condition: event.i == 200
       action:
         print_event:
-          var_root: output
-...
+
+    - name: 
+      condition: event.i == 400
+      action:
+        assert_fact:
+          fact:
+            fact_matched: "400 matched"
+
+    - name:
+      condition: event.fact_matched == "400 matched"
+      action:
+        run_playbook:
+          name: print.yml
+
+
+    - name: run print playbook
+      condition: event.i == 300
+      action:
+        run_playbook:
+          name: print.yml

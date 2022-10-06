@@ -1,0 +1,10 @@
+- name: print events
+  hosts: all
+  gather_facts: False
+  tasks:
+    - name: print event output
+      debug:
+        msg: "matched: {{ event }}"
+
+    - name: create file
+      shell: 'echo "$(date) - matched {{ event }}" >> /tmp/ansible-results.txt'
